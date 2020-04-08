@@ -21,6 +21,6 @@ class UsersController < ApplicationController
   end
 
   def get_all_users
-    User.select("users.id, users.user_name").drop(1)
+    User.select("users.id, users.user_name")
   end
 end
