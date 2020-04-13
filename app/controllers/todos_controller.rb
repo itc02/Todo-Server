@@ -1,31 +1,29 @@
 class TodosController < ApplicationController
   def index
-    render :json => get_all_todos
+    render :json => get_paginated_todos
   end
 
   def create
-    result = HandleTodoService.run(
-      :type => 'create', 
+    result = CreateTodoService.run(
       :title => params[:title], 
       :description => params[:description], 
       :assigned_to => params[:assigned_to], 
       :deadline => params[:deadline]
     )
     if result.valid?
-      render :json => get_all_todos
+      render :json => get_unpaginated_todos
     else
       head :bad_request
     end
   end
 
   def destroy
-      TodoList.find(params[:id]).destroy
-      render :json => get_all_todos
+    TodoList.find(params[:id]).destroy
+    render :json => get_all_todos
   end
 
   def update
-    result = HandleTodoService.run(
-      :type => 'update',
+    result = EditTodoService.run(
       :id => params[:id],
       :title => params[:title], 
       :description => params[:description], 
@@ -49,16 +47,33 @@ class TodosController < ApplicationController
     render :json => TodoList.joins(:user).pluck("users.user_name").to_set
   end
 
-  def get_all_todos
-    TodoList.joins(:user)
-    .select("
-      todo_lists.id,
-      todo_lists.title,
-      todo_lists.description,
-      users.user_name,
-      users.id AS user_id,
-      todo_lists.state,
-      todo_lists.deadline")
-    .as_json
+  def count
+    render :json => { count: TodoList.count }
+  end
+
+  def get_paginated_todos
+    per = params[:per].to_i
+    page = params[:page].to_i
+
+    paginated_todos = todo_list_joined_with_users
+    .paginate(
+      :page => page, 
+      :per_page => per
+    )
+
+    if !paginated_todos
+      get_unpaginated_todos
+    else
+      paginated_todos
+    end
+  end
+
+  def get_unpaginated_todos
+    todo_list_joined_with_users.as_json
+  end
+
+  def todo_list_joined_with_users
+    joined = JoinTodoListWithUsersService.run()
+    joined.result
   end
 end
