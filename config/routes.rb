@@ -3,7 +3,6 @@ Rails.application.routes.draw do
     collection do
       delete :delete_all, to: 'todos#delete_all'
       get :get_owners, to: 'todos#get_owners'
-      get :count, to: 'todos#count'
     end
   end
   resources :users, only: [:index, :create, :destroy]

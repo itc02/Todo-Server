@@ -16,11 +16,10 @@ class UsersController < ApplicationController
     params[:id].split(',').each do |id|
       User.find(id).destroy
     end
-    TodoList.where(:user_id => nil).update_all(:user_id => 1)
     render :json => get_all_users
   end
 
   def get_all_users
-    User.select("users.id, users.user_name").drop(1)
+    User.select("users.id, users.user_name, users.todos_number")
   end
 end
