@@ -18,9 +18,7 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    params[:id].split(',').each do |id|
-      TodoList.find(id).destroy
-    end
+    TodoList.where(:id => params[:id].split(',')).destroy_all
     render :json => get_unpaginated_todos
   end
 
