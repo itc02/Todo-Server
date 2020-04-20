@@ -13,13 +13,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    params[:id].split(',').each do |id|
-      User.find(id).destroy
-    end
+    User.where(:id => params[:id].split(',')).destroy_all
     render :json => get_all_users
   end
 
   def get_all_users
-    User.select("users.id, users.user_name, users.todos_number")
+    User.select("users.id, users.user_name")
   end
 end

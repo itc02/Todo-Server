@@ -4,7 +4,6 @@ class TodosController < ApplicationController
   end
 
   def create
-    User.find(params[:assigned_to]).increment!(:todos_number, 1)
     result = CreateTodoService.run(
       :title => params[:title], 
       :description => params[:description], 
@@ -19,18 +18,11 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    params[:id].split(',').each do |id|
-      User.find(TodoList.find(id).user_id).increment!(:todos_number, -1)
-      TodoList.find(id).destroy
-    end
+    TodoList.where(:id => params[:id].split(',')).destroy_all
     render :json => get_unpaginated_todos
   end
 
   def update
-    if params[:id] != params[:assigned_to]
-      User.find(params[:id]).increment(:todos_number, -1)
-      User.find(params[:assigned_to]).increment(:todos_number, 1)
-    end
     result = UpdateTodoService.run(
       :id => params[:id],
       :title => params[:title], 
@@ -61,7 +53,7 @@ class TodosController < ApplicationController
 
     paginated_todos = todo_list_joined_with_users
     .page(page)
-    .per(per)
+    .per_page(per)
       
     if paginated_todos.length == 0
       { 
