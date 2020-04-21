@@ -1,6 +1,6 @@
 class JoinTodoListWithUsersService < ActiveInteraction::Base
   def execute
-    TodoList.joins(:user)
+    todos = TodoList.joins(:user)
     .select("
       todo_lists.id,
       todo_lists.title,
