@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.where(:id => params[:id].split(',')).destroy_all
+    User.where(:id => params[:ids]).destroy_all
     render :json => get_all_users
   end
 
