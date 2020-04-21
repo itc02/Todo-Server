@@ -31,6 +31,7 @@ class TodosController < ApplicationController
       :state => params[:state],
       :deadline => params[:deadline]
     )
+    
     if result.valid?
       render :json => get_all_todos
     else
