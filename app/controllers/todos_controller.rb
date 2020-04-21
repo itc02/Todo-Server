@@ -55,7 +55,7 @@ class TodosController < ApplicationController
     .page(page)
     .per_page(per)
       
-    if paginated_todos.length == 0
+    if paginated_todos.empty?
       { 
         :todos => get_unpaginated_todos,
         :total_record_count => TodoList.count,
