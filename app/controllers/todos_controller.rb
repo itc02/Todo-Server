@@ -11,19 +11,19 @@ class TodosController < ApplicationController
       :deadline => params[:deadline]
     )
     if result.valid?
-      render :json => get_unpaginated_todos
+      render :json => get_paginated_todos
     else
       head :bad_request
     end
   end
 
   def destroy
-    TodoList.where(:id => params[:id].split(',')).destroy_all
+    TodoList.where(:id => params[:ids]).destroy_all
     render :json => get_unpaginated_todos
   end
 
   def update
-    result = EditTodoService.run(
+    result = UpdateTodoService.run(
       :id => params[:id],
       :title => params[:title], 
       :description => params[:description], 
@@ -31,6 +31,7 @@ class TodosController < ApplicationController
       :state => params[:state],
       :deadline => params[:deadline]
     )
+    
     if result.valid?
       render :json => get_all_todos
     else
@@ -47,24 +48,24 @@ class TodosController < ApplicationController
     render :json => TodoList.joins(:user).pluck("users.user_name").to_set
   end
 
-  def count
-    render :json => { count: TodoList.count }
-  end
-
   def get_paginated_todos
     per = params[:per].to_i
     page = params[:page].to_i
 
     paginated_todos = todo_list_joined_with_users
-    .paginate(
-      :page => page, 
-      :per_page => per
-    )
-
-    if !paginated_todos
-      get_unpaginated_todos
+    .page(page)
+    .per_page(per)
+      
+    if paginated_todos.empty?
+      { 
+        :todos => get_unpaginated_todos,
+        :total_record_count => TodoList.count,
+      }
     else
-      paginated_todos
+      {
+        :todos => paginated_todos,
+        :total_record_count => TodoList.count
+      }
     end
   end
 

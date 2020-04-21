@@ -1,4 +1,4 @@
-class EditTodoService < ActiveInteraction::Base
+class UpdateTodoService < ActiveInteraction::Base
   integer :id
   string :title
   string :description 
