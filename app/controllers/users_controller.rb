@@ -41,11 +41,11 @@ class UsersController < ApplicationController
   end
 
   def get_users
-    User.select("users.id, users.user_name")
+    User.select("users.id, users.user_name").order(:user_name)
   end
 
   def user_todos_number
-    User.all.collect do |user|
+    get_users.collect do |user|
       TodoList.where(:user_id => user.id).count
     end
   end
