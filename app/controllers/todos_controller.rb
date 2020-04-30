@@ -73,6 +73,15 @@ class TodosController < ApplicationController
     end
   end
 
+  def sort
+    render :json => PaginateItemsService.run!(
+      :paginate => true,
+      :per => params[:per],
+      :page => params[:page],
+      :items => todo_list_joined_with_users
+    ).order("#{params[:sorting_criteria]} #{params[:order]}")
+  end
+
   def delete_all
     TodoList.delete_all
     head :ok
