@@ -7,7 +7,7 @@ class TodosController < ApplicationController
     )
 
     render :json => { 
-      :todos => todos,
+      :todos => todos.order("#{params[:sorting_criteria]} #{params[:order]}"),
       :total_record_count => TodoList.count
     }
     
