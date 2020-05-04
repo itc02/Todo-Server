@@ -7,7 +7,7 @@ class TodosController < ApplicationController
     )
 
     render :json => { 
-      :todos => todos,
+      :todos => todos.order("#{params[:sorting_criteria]} #{params[:order]}"),
       :total_record_count => TodoList.count
     }
     
@@ -71,15 +71,6 @@ class TodosController < ApplicationController
     else
       head :bad_request
     end
-  end
-
-  def sort
-    render :json => PaginateItemsService.run!(
-      :paginate => true,
-      :per => params[:per],
-      :page => params[:page],
-      :items => todo_list_joined_with_users
-    ).order("#{params[:sorting_criteria]} #{params[:order]}")
   end
 
   def delete_all
