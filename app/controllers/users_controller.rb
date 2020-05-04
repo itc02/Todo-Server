@@ -40,6 +40,7 @@ class UsersController < ApplicationController
     render :json => get_users
   end
 
+  private
   def get_users
     User.select("users.id, users.user_name").order(:user_name)
   end
