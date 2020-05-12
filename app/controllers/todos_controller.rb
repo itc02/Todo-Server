@@ -3,6 +3,8 @@ class TodosController < ApplicationController
     todos = GetTodosService.run(
       :per => params[:per],
       :page => params[:page],
+      :sorting_criteria => params[:sorting_criteria],
+      :order => params[:order]
     )
 
     if todos.valid?

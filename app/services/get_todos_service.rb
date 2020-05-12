@@ -1,12 +1,14 @@
 class GetTodosService < ActiveInteraction::Base
   integer :per, default: 5
   integer :page, default: 1
+  string :sorting_criteria, default: 'title'
+  string :order, default: 'ASC'
 
   def execute
     todos = paginated_todos
     if !todos.out_of_range?
       { 
-        :todos => todos,
+        :todos => order == 'none' ? todos : todos.order("#{sorting_criteria} #{order}"),
         :total_record_count => TodoList.count
       }
     else 
