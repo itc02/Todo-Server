@@ -1,6 +1,19 @@
 class UsersController < ApplicationController
   def index
-    render :json => get_all_users
+    if params[:without_pagination]
+      render :json => User.all and return
+    end
+    
+    users = GetUsersService.run(
+      :per => params[:per],
+      :page => params[:page]
+    )
+
+    if users.valid?
+      render json: users.result
+    else
+      render json: users.errors, status: 400
+    end
   end
 
   def create
@@ -13,11 +26,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.where(:id => params[:ids]).destroy_all
-    render :json => get_all_users
+    if(params[:destroy_all])
+      User.destroy_all
+    else
+      User.where(:id => params[:ids]).destroy_all
+    end
+    head :no_content
   end
 
-  def get_all_users
-    User.select("users.id, users.user_name")
-  end
 end
