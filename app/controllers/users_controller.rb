@@ -1,16 +1,19 @@
 class UsersController < ApplicationController
   def index
-    users = PaginateItemsService.run!(
-      :items => get_users,
+    if params[:without_pagination]
+      render :json => User.all and return
+    end
+    
+    users = GetUsersService.run(
       :per => params[:per],
       :page => params[:page]
     )
 
-    render :json => { 
-      :users => users,
-      :total_record_count => User.count,
-      :todos_number => user_todos_number
-    }
+    if users.valid?
+      render json: users.result
+    else
+      render json: users.errors, status: 400
+    end
   end
 
   def create
@@ -23,30 +26,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.where(:id => params[:ids]).destroy_all
-    render :json => {
-      :users => PaginateItemsService.run!(
-        :paginate => true,
-        :per => params[:per],
-        :page => params[:page],
-        :items => get_users
-      ),
-      :total_record_count => User.count,
-      :todos_number => user_todos_number
-    }
-  end
-
-  def get_all_users
-    render :json => get_users
-  end
-
-  def get_users
-    User.select("users.id, users.user_name")
-  end
-
-  def user_todos_number
-    User.all.collect do |user|
-      TodoList.where(:user_id => user.id).count
+    if(params[:destroy_all])
+      User.destroy_all
+    else
+      User.where(:id => params[:ids]).destroy_all
     end
+    head :no_content
   end
+
 end
