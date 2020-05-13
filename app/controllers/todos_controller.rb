@@ -10,23 +10,23 @@ class TodosController < ApplicationController
     if todos.valid?
       render :json => todos.result
     else
-      render :json => service.errors, status: 400
+      render :json => result.errors, status: 400
     end
   rescue => err
-    render :json => {:error => err}
+    render :json => { :error => err }
   end
 
   def create
     result = CreateTodoService.run(
       :title => params[:title], 
       :description => params[:description], 
-      :assigned_to => params[:assigned_to],
+      :user_id => params[:user_id],
       :deadline => params[:deadline]
     )
     if result.valid?
       head :no_content
     else
-      render :json => service.errors, status: 400
+      render :json => result.errors, status: 400
     end
   end
 
@@ -44,7 +44,7 @@ class TodosController < ApplicationController
       :id => params[:id].to_i,
       :title => params[:title], 
       :description => params[:description], 
-      :assigned_to => params[:assigned_to].to_i,
+      :user_id => params[:user_id].to_i,
       :state => params[:state],
       :deadline => params[:deadline]
     )
