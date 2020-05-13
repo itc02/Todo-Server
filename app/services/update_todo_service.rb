@@ -4,7 +4,7 @@ class UpdateTodoService < ActiveInteraction::Base
   string :description 
   integer :assigned_to
   date :deadline
-  state :string
+  string :state
 
   def execute
     TodoList.update(
