@@ -1,7 +1,7 @@
 class CreateTodoService < ActiveInteraction::Base
   string :title
   string :description 
-  integer :assigned_to
+  integer :user_id
   date :deadline
 
   def execute
@@ -10,7 +10,7 @@ class CreateTodoService < ActiveInteraction::Base
       :state => 'new',
       :deadline => deadline,
       :description => description,
-      :user_id => assigned_to
+      :user_id => user_id
     )
   end
 end
