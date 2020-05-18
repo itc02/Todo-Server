@@ -18,10 +18,19 @@ class UsersController < ApplicationController
 
   def create
     if !User.find_by(:user_name => params[:user_name])
-      User.create(:user_name => params[:user_name])
-      render :json => { isOkay: true }
+      result = CreateUserService.run(
+        :user_name => params[:user_name],
+        :email => params[:email]
+      )
+
+      if result.valid?
+        UserMailer.new_user(params[:user_name], params[:email]).deliver
+        head :no_content
+      else
+        render :json => result.errors, status: 400
+      end
     else
-      render :json => { isOkay: false }
+      render :json => { :error => 'User is already created' }
     end
   end
 

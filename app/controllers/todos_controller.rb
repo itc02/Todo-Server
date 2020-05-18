@@ -17,6 +17,8 @@ class TodosController < ApplicationController
   end
 
   def create
+    user = User.find(params[:user_id])
+
     result = CreateTodoService.run(
       :title => params[:title], 
       :description => params[:description], 
@@ -24,10 +26,13 @@ class TodosController < ApplicationController
       :deadline => params[:deadline]
     )
     if result.valid?
+      UserMailer.new_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
     end
+
+
   end
 
   def destroy
@@ -40,6 +45,7 @@ class TodosController < ApplicationController
   end
 
   def update
+    user = User.find(params[:user_id])
     result = UpdateTodoService.run(
       :id => params[:id].to_i,
       :title => params[:title], 
@@ -50,6 +56,7 @@ class TodosController < ApplicationController
     )
     
     if result.valid?
+      UserMailer.edited_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
