@@ -1,22 +1,18 @@
 class GetUsersService < ActiveInteraction::Base
   integer :per, default: 5
   integer :page, default: 1
+  string :search_string, default: ''
+  string :search_criteria, default: 'user_name'
 
   def execute
-    users = paginated_users
-    if !users.out_of_range?
-      { 
-        :users => users,
-        :total_record_count => User.count,
-        :todos_number => user_todos_number
-      }
-    else 
-      { 
-        :users => unpaginated_users,
-        :total_record_count => User.count,
-        :todos_number => user_todos_number
-      }
-    end
+    users = paginated_users.out_of_range? ? unpaginated_users : paginated_users
+    filtered_users = !search_string ? users : users.where("#{search_criteria} LIKE ?", "%#{search_string}%")
+
+    {
+      :users => filtered_users,
+      :total_record_count => User.count,
+      :todos_number => user_todos_number
+    }
   end
 
   def paginated_users
