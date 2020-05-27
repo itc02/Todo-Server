@@ -1,5 +1,13 @@
 class TodosController < ApplicationController
   def index
+    if params[:all_todos_id]
+      render :json => GetAllTodosIdService.run!() and return
+    end
+
+    if params[:id]
+      render :json => GetTodoByIdService.run!(:id => params[:id]) and return
+    end
+
     todos = GetTodosService.run(
       :per => params[:per],
       :page => params[:page],

@@ -4,6 +4,10 @@ class UsersController < ApplicationController
       render :json => User.all and return
     end
     
+    if params[:all_todos_id]
+      render :json => GetAllUsersIdService.run!() and return
+    end
+
     users = GetUsersService.run(
       :per => params[:per],
       :page => params[:page],
