@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_20_061430) do
+ActiveRecord::Schema.define(version: 2020_05_14_070330) do
 
   create_table "todo_lists", force: :cascade do |t|
     t.string "title", null: false
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_04_20_061430) do
     t.string "user_name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", default: "fizmatstepanakert@gmail.com"
   end
 
   add_foreign_key "todo_lists", "users", on_delete: :nullify

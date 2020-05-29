@@ -4,7 +4,9 @@ class TodosController < ApplicationController
       :per => params[:per],
       :page => params[:page],
       :sorting_criteria => params[:sorting_criteria],
-      :order => params[:order]
+      :order => params[:order],
+      :search_string => params[:search_string],
+      :filter_criteria => params[:filter_criteria]
     )
 
     if todos.valid?
@@ -17,6 +19,8 @@ class TodosController < ApplicationController
   end
 
   def create
+    user = User.find(params[:user_id])
+
     result = CreateTodoService.run(
       :title => params[:title], 
       :description => params[:description], 
@@ -24,6 +28,7 @@ class TodosController < ApplicationController
       :deadline => params[:deadline]
     )
     if result.valid?
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
@@ -40,6 +45,7 @@ class TodosController < ApplicationController
   end
 
   def update
+    user = User.find(params[:user_id])
     result = UpdateTodoService.run(
       :id => params[:id].to_i,
       :title => params[:title], 
@@ -50,6 +56,7 @@ class TodosController < ApplicationController
     )
     
     if result.valid?
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
