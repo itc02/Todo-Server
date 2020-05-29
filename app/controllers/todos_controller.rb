@@ -14,7 +14,7 @@ class TodosController < ApplicationController
       :sorting_criteria => params[:sorting_criteria],
       :order => params[:order],
       :search_string => params[:search_string],
-      :search_criteria => params[:search_criteria]
+      :filter_criteria => params[:filter_criteria]
     )
 
     if todos.valid?
@@ -36,7 +36,7 @@ class TodosController < ApplicationController
       :deadline => params[:deadline]
     )
     if result.valid?
-      UserMailer.new_todo(user).deliver
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
@@ -64,7 +64,7 @@ class TodosController < ApplicationController
     )
     
     if result.valid?
-      UserMailer.edited_todo(user).deliver
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
