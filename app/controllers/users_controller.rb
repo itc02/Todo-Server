@@ -6,7 +6,9 @@ class UsersController < ApplicationController
     
     users = GetUsersService.run(
       :per => params[:per],
-      :page => params[:page]
+      :page => params[:page],
+      :search_string => params[:search_string],
+      :filter_criteria => params[:filter_criteria]
     )
 
     if users.valid?
