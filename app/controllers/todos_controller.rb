@@ -26,7 +26,7 @@ class TodosController < ApplicationController
       :deadline => params[:deadline]
     )
     if result.valid?
-      UserMailer.new_todo(user).deliver
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400
@@ -56,7 +56,7 @@ class TodosController < ApplicationController
     )
     
     if result.valid?
-      UserMailer.edited_todo(user).deliver
+      UserMailer.assign_todo(user).deliver
       head :no_content
     else
       render :json => result.errors, status: 400

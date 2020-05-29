@@ -5,13 +5,9 @@ class UserMailer < ApplicationMailer
     mail(:to => @email, :subject => 'Welcome to Todo!')
   end
 
-  def new_todo(user)
+  def assign_todo(user)
     @user = user
     @url = 'http://localhost:4000'
     mail(:to => @user.email, :subject => 'You have been assigned')
-  end
-
-  def edited_todo(user)
-    new_todo(user)
   end
 end
