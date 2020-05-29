@@ -6,7 +6,7 @@ class TodosController < ApplicationController
       :sorting_criteria => params[:sorting_criteria],
       :order => params[:order],
       :search_string => params[:search_string],
-      :search_criteria => params[:search_criteria]
+      :filter_criteria => params[:filter_criteria]
     )
 
     if todos.valid?

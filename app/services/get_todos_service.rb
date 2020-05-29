@@ -4,12 +4,12 @@ class GetTodosService < ActiveInteraction::Base
   string :sorting_criteria, default: 'title'
   string :order, default: 'ASC'
   string :search_string, default: ''
-  string :search_criteria, default: 'title'
+  string :filter_criteria, default: 'title'
 
   def execute
     todos = paginated_todos.out_of_range? ? unpaginated_todos : paginated_todos
     sorted_todos = order == 'none' ? todos : todos.order("#{sorting_criteria} #{order}")
-    filtered_todos = !search_string ? sorted_todos : sorted_todos.where("#{search_criteria} LIKE ?", "%#{search_string}%")
+    filtered_todos = !search_string ? sorted_todos : sorted_todos.where("#{filter_criteria} LIKE ?", "%#{search_string}%")
 
     {
       :todos =>  filtered_todos,
