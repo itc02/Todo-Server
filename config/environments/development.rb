@@ -38,15 +38,8 @@ Rails.application.configure do
 
   # Change mail delivery to either :smtp, :sendmail, :file, :test
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { :host => '192.168.0.105:3000' }
-  config.action_mailer.smtp_settings = { 
-    :address => "smtp.gmail.com",
-    :port => 587,
-    :domain => 'gmail.com',
-    :user_name => 'fizmatstepanakert@gmail.com',
-    :password => 'lilit1980',
-    :authentication => 'plain',
-  }
+  
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
