@@ -4,7 +4,9 @@ class TodosController < ApplicationController
       :per => params[:per],
       :page => params[:page],
       :sorting_criteria => params[:sorting_criteria],
-      :order => params[:order]
+      :order => params[:order],
+      :search_string => params[:search_string],
+      :filter_criteria => params[:filter_criteria]
     )
 
     if todos.valid?
@@ -31,8 +33,6 @@ class TodosController < ApplicationController
     else
       render :json => result.errors, status: 400
     end
-
-
   end
 
   def destroy
