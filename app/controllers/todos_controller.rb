@@ -1,7 +1,7 @@
 class TodosController < ApplicationController
   def index
     case
-      when params[:all_todos_id] then render :json => GetAllTodosIdService.run!()
+      when params[:all_todos_ids] then render :json => GetAllTodosIdService.run!()
       when params[:id] then render :json => GetTodoByIdService.run!(:id => params[:id])
       else
         todos = GetTodosService.run(

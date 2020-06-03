@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   def index
     case 
       when params[:without_pagination] then render :json => User.all
-      when params[:all_todos_id] then render :json => GetAllUsersIdService.run!()
+      when params[:all_todos_ids] then render :json => GetAllUsersIdService.run!()
       else
         users = GetUsersService.run(
           :per => params[:per],
