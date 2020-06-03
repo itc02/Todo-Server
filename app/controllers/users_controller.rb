@@ -1,25 +1,24 @@
 class UsersController < ApplicationController
   def index
-    if params[:without_pagination]
-      render :json => User.all and return
-    end
+    case 
+      when params[:without_pagination] then render :json => User.all
+      when params[:all_todos_id] then render :json => GetAllUsersIdService.run!()
+      else
+        users = GetUsersService.run(
+          :per => params[:per],
+          :page => params[:page],
+          :search_string => params[:search_string],
+          :filter_criteria => params[:filter_criteria]
+        )
     
-    if params[:all_todos_id]
-      render :json => GetAllUsersIdService.run!() and return
+        if users.valid?
+          render json: users.result
+        else
+          render json: users.errors, status: 400
+        end
     end
-
-    users = GetUsersService.run(
-      :per => params[:per],
-      :page => params[:page],
-      :search_string => params[:search_string],
-      :filter_criteria => params[:filter_criteria]
-    )
-
-    if users.valid?
-      render json: users.result
-    else
-      render json: users.errors, status: 400
-    end
+  rescue => err
+    render :json => { :error => err }
   end
 
   def create
