@@ -1,18 +1,25 @@
 class TodosController < ApplicationController
   def index
-    todos = GetTodosService.run(
-      :per => params[:per],
-      :page => params[:page],
-      :sorting_criteria => params[:sorting_criteria],
-      :order => params[:order],
-      :search_string => params[:search_string],
-      :filter_criteria => params[:filter_criteria]
-    )
+    case
+      when params[:all_todos_ids]
+        render :json => GetAllTodosIdService.run!()
+      when params[:id]
+        render :json => GetTodoByIdService.run!(:id => params[:id])
+      else
+        todos = GetTodosService.run(
+          :per => params[:per],
+          :page => params[:page],
+          :sorting_criteria => params[:sorting_criteria],
+          :order => params[:order],
+          :search_string => params[:search_string],
+          :filter_criteria => params[:filter_criteria]
+        )
 
-    if todos.valid?
-      render :json => todos.result
-    else
-      render :json => result.errors, status: 400
+        if todos.valid?
+          render :json => todos.result
+        else
+          render :json => result.errors, status: 400
+        end
     end
   rescue => err
     render :json => { :error => err }
