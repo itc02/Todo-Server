@@ -16,13 +16,29 @@ class GetTodosService < ActiveInteraction::Base
 
     todos = paginated_todos.out_of_range? ? unpaginated_todos : paginated_todos
     sorted_todos = order == 'none' ? todos : todos.order("#{sorting_criteria} #{order}")
-    filtered_todos = !search_string ? sorted_todos : sorted_todos.where("#{filter_criteria} LIKE ?", "%#{search_string}%")
+    if !search_string
+      filtered_todos = sorted_todos
+    else
+      if filter_criteria == 'all'
+        filtered_todos = sorted_todos.where(filter_by_all_where_clause, search: "%#{search_string}%")
+      else
+        filtered_todos = sorted_todos.where("#{filter_criteria} LIKE ?", "%#{search_string}%")
+      end
+    end
+
 
     {
       :todos =>  filtered_todos,
       :total_record_count => TodoList.count
     }
 
+  end
+
+  def filter_by_all_where_clause
+    'title LIKE :search OR 
+    deadline LIKE :search OR 
+    state LIKE :search OR 
+    user_name LIKE :search'
   end
 
   def paginated_todos
