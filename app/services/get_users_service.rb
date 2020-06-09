@@ -26,10 +26,7 @@ class GetUsersService < ActiveInteraction::Base
   end
 
   def filter_by_all_where_clause
-    (User.column_names - ['id', 'created_at', 'updated_at'])
-    .map{ |col| "#{col} LIKE :search OR " }
-    .join
-    .delete_suffix(" OR ")
+    'user_name LIKE :search'
   end
 
   def paginated_users

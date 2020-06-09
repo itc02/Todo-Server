@@ -35,10 +35,10 @@ class GetTodosService < ActiveInteraction::Base
   end
 
   def filter_by_all_where_clause
-    ['title', 'deadline', 'state', 'user_name']
-    .map{ |col| "#{col} LIKE :search OR " }
-    .join
-    .delete_suffix(" OR ")
+    'title LIKE :search OR 
+    deadline LIKE :search OR 
+    state LIKE :search OR 
+    user_name LIKE :search'
   end
 
   def paginated_todos
