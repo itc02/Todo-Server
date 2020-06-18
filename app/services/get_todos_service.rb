@@ -53,5 +53,4 @@ class GetTodosService < ActiveInteraction::Base
     joined = JoinTodoListWithUsersService.run()
     joined.result
   end
-
 end
