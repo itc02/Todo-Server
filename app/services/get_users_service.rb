@@ -17,7 +17,6 @@ class GetUsersService < ActiveInteraction::Base
       end
     end
 
-
     {
       :users => filtered_users,
       :total_record_count => User.count,
@@ -30,20 +29,20 @@ class GetUsersService < ActiveInteraction::Base
   end
 
   def paginated_users
-    get_users.page(page).per(per)
+    all_users.page(page).per(per)
   end
 
   def unpaginated_users
-    get_users
+    all_users
   end
 
   def user_todos_number
-    get_users.collect do |user|
+    paginated_users.collect do |user|
       TodoList.where(:user_id => user.id).count
     end
   end
 
-  def get_users
-    User.select("users.id, users.user_name").order(:user_name)
+  def all_users
+    User.select("users.id, users.user_name").order_by_name
   end
 end
