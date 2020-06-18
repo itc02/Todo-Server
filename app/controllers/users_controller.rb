@@ -10,7 +10,7 @@ class UsersController < ApplicationController
           :per => params[:per],
           :page => params[:page],
           :search_string => params[:search_string],
-          :filter_criteria => params[:filter_criteria]
+          :filter_criterion => params[:filter_criterion]
         )
     
         if users.valid?
