@@ -29,11 +29,11 @@ class GetUsersService < ActiveInteraction::Base
   end
 
   def paginated_users
-    get_users.page(page).per(per)
+    all_users.page(page).per(per)
   end
 
   def unpaginated_users
-    get_users
+    all_users
   end
 
   def user_todos_number
@@ -42,7 +42,7 @@ class GetUsersService < ActiveInteraction::Base
     end
   end
 
-  def get_users
-    User.select("users.id, users.user_name").order('LOWER(user_name)')
+  def all_users
+    User.select("users.id, users.user_name").order_by_name
   end
 end

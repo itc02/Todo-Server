@@ -7,4 +7,5 @@
 
 class User < ApplicationRecord
   has_many :todo_lists
+  scope :order_by_name, -> { order('LOWER(user_name)') }
 end
