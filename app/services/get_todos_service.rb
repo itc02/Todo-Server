@@ -1,10 +1,10 @@
 class GetTodosService < ActiveInteraction::Base
   integer :per, default: 5
   integer :page, default: 1
-  string :sorting_criteria, default: 'title'
+  string :sorting_criterion, default: 'title'
   string :order, default: 'ASC'
   string :search_string, default: ''
-  string :filter_criteria, default: 'title'
+  string :filter_criterion, default: 'title'
 
   def execute
     if TodoList.count.eql? 0
@@ -15,14 +15,14 @@ class GetTodosService < ActiveInteraction::Base
     end
 
     todos = paginated_todos.out_of_range? ? unpaginated_todos : paginated_todos
-    sorted_todos = order == 'none' ? todos : todos.order("#{sorting_criteria} #{order}")
+    sorted_todos = order == 'none' ? todos : todos.order("#{sorting_criterion} #{order}")
     if !search_string
       filtered_todos = sorted_todos
     else
-      if filter_criteria == 'all'
+      if filter_criterion == 'all'
         filtered_todos = sorted_todos.where(filter_by_all_where_clause, search: "%#{search_string}%")
       else
-        filtered_todos = sorted_todos.where("#{filter_criteria} LIKE ?", "%#{search_string}%")
+        filtered_todos = sorted_todos.where("#{filter_criterion} LIKE ?", "%#{search_string}%")
       end
     end
 

@@ -9,10 +9,10 @@ class TodosController < ApplicationController
         todos = GetTodosService.run(
           :per => params[:per],
           :page => params[:page],
-          :sorting_criteria => params[:sorting_criteria],
+          :sorting_criterion => params[:sorting_criterion],
           :order => params[:order],
           :search_string => params[:search_string],
-          :filter_criteria => params[:filter_criteria]
+          :filter_criterion => params[:filter_criterion]
         )
 
         if todos.valid?
