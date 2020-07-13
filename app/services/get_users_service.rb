@@ -5,13 +5,11 @@ class GetUsersService < ActiveInteraction::Base
   string :filter_criterion, default: 'user_name'
 
   def execute
-    if User.count.eql? 0
-      return {
-        :users => [],
-        :total_record_count => 0,
-        :todos_number => []
-      }
-    end
+    return {
+      :users => [],
+      :total_record_count => 0,
+      :todos_number => []
+    } if User.count.eql? 0
 
     users = paginated_users.out_of_range? ? unpaginated_users : paginated_users
     if !search_string

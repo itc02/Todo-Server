@@ -7,12 +7,10 @@ class GetTodosService < ActiveInteraction::Base
   string :filter_criterion, default: 'title'
 
   def execute
-    if TodoList.count.eql? 0
-      return {
-        :todos => [],
-        :total_record_count => 0
-      }
-    end
+    return {
+      :todos => [],
+      :total_record_count => 0
+    } if TodoList.count.eql? 0
 
     todos = paginated_todos.out_of_range? ? unpaginated_todos : paginated_todos
     sorted_todos = order == 'none' ? todos : todos.order("#{sorting_criterion} #{order}")
