@@ -27,7 +27,7 @@ class GetTodosService < ActiveInteraction::Base
 
     {
       :todos =>  filtered_todos,
-      :total_record_count => TodoList.count
+      :total_record_count => search_string == '' ? TodoList.count : TodoList.all.where("#{filter_criterion} LIKE ?", "%#{search_string}%").count
     }
 
   end

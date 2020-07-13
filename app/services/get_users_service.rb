@@ -21,10 +21,10 @@ class GetUsersService < ActiveInteraction::Base
         filtered_users = users.where("#{filter_criterion} LIKE ?", "%#{search_string}%")
       end
     end
-
+    # binding.pry
     {
       :users => filtered_users,
-      :total_record_count => User.count,
+      :total_record_count => search_string == '' ? User.count : User.all.where("#{filter_criterion} LIKE ?", "%#{search_string}%").count,
       :todos_number => user_todos_number
     }
   end
