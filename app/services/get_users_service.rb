@@ -5,15 +5,20 @@ class GetUsersService < ActiveInteraction::Base
   string :filter_criterion, default: 'user_name'
 
   def execute
+    return {
+      :users => [],
+      :total_record_count => 0,
+      :todos_number => []
+    } if User.count.eql? 0
+
     users = paginated_users.out_of_range? ? unpaginated_users : paginated_users
-    filtered_users = !search_string ? users : users.where("#{filter_criterion} LIKE ?", "%#{search_string}%")
     if !search_string
-      filtered_todos = users
+      filtered_users = users
     else
       if filter_criterion == 'all'
-        filtered_todos = users.where(filter_by_all_where_clause, search: "%#{search_string}%")
+        filtered_users = users.where(filter_by_all_where_clause, search: "%#{search_string}%")
       else
-        filtered_todos = users.where("#{filter_criterion} LIKE ?", "%#{search_string}%")
+        filtered_users = users.where("#{filter_criterion} LIKE ?", "%#{search_string}%")
       end
     end
 
@@ -25,7 +30,8 @@ class GetUsersService < ActiveInteraction::Base
   end
 
   def filter_by_all_where_clause
-    'user_name LIKE :search'
+    'user_name LIKE :search OR
+    email LIKE :search'
   end
 
   def paginated_users
@@ -43,6 +49,6 @@ class GetUsersService < ActiveInteraction::Base
   end
 
   def all_users
-    User.select("users.id, users.user_name").order_by_name
+    User.select("users.id, users.user_name, users.email").order_by_name
   end
 end
